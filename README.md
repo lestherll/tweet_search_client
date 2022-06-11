@@ -1,16 +1,17 @@
 # Twitter Search Client (WIP)
-
 An unofficial **WIP** client for the twitter API that has only one goal; search for tweets.
 
 
-# Setup
+# Setup and Prerequisites
+Before everything, make sure that you have a developer account and a bearer token 
+from Twitter. You can find out how to get one [here](https://developer.twitter.com/en/docs/twitter-api)
 
 Project requires you to create a `.env` file at the project root.
 The library forces you to create one by default so that there is 
 less risk in leaking your credentials accidentally.
 
 `.env` file should look like below
-```
+```env
 BEARER_TOKEN=your_bearer_token_that_you_got_from_twitter
 ```
 
@@ -25,4 +26,5 @@ wants you to build queries
 
 # TODO
 - A richer and higher level way to mine tweets (include parameters that API allows)
+- caching with database `sqlite3`
 - examples
