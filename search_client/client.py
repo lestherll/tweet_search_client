@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from typing import Optional
 
@@ -103,3 +104,34 @@ class SearchClient:
         url = SearchClient.BASE_URL / "tweets" / "search" / "recent"
         response = requests.get(url, params=params, headers=self.headers)
         return response.json()
+
+    def get_all_tweets(
+        self,
+        query: list[str],
+        *,
+        cooldown: int = 1,
+        max_results: int = 10,
+        end_time: Optional[datetime] = None,
+        start_time: Optional[datetime] = None,
+        next_token: Optional[str] = None,
+        since_id: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        until_id: Optional[str] = None,
+        expansions: Optional[list[str]] = None,
+        media_fields: Optional[list[str]] = None,
+        place_fields: Optional[list[str]] = None,
+        poll_fields: Optional[list[str]] = None,
+        tweet_fields: Optional[list[str]] = None,
+        user_fields: Optional[list[str]] = None,
+    ) -> dict:
+        result = []
+        tweets = self.get_tweets(query, max_results=max_results, next_token=next_token)
+        result.append(tweets)
+        next_token = tweets.get("meta").get("next_token")
+        while next_token:
+            time.sleep(cooldown)
+            tweets = self.get_tweets(query, max_results=max_results, next_token=next_token)
+            result.append(tweets)
+            next_token = tweets.get("meta").get("next_token")
+
+        return result
