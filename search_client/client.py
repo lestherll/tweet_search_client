@@ -123,15 +123,44 @@ class SearchClient:
         poll_fields: Optional[list[str]] = None,
         tweet_fields: Optional[list[str]] = None,
         user_fields: Optional[list[str]] = None,
+        tweet_only: bool = False,
+        max_page: Optional[int] = 1,
     ) -> dict:
         result = []
-        tweets = self.get_tweets(query, max_results=max_results, next_token=next_token)
-        result.append(tweets)
-        next_token = tweets.get("meta").get("next_token")
-        while next_token:
-            time.sleep(cooldown)
-            tweets = self.get_tweets(query, max_results=max_results, next_token=next_token)
+        params = {
+            "max_results": max_results,
+            "end_time": end_time,
+            "start_time": start_time,
+            "next_token": next_token,
+            "since_id": since_id,
+            "sort_order": sort_order,
+            "until_id": until_id,
+            "expansions": expansions,
+            "media_fields": media_fields,
+            "place_fields": place_fields,
+            "poll_fields": poll_fields,
+            "tweet_fields": tweet_fields,
+            "user_fields": user_fields,
+        }
+        tweets = self.get_tweets(query, **params)
+
+        if tweet_only:
+            result.extend(tweets["data"])
+        else:
             result.append(tweets)
+
+        next_token = tweets.get("meta").get("next_token")
+        max_page -= 1
+        while next_token and max_page > 0:
+            time.sleep(cooldown)
+            tweets = self.get_tweets(query, **params, next_token=next_token)
+
+            if tweet_only:
+                result.extend(tweets["data"])
+            else:
+                result.append(tweets)
+
             next_token = tweets.get("meta").get("next_token")
+            max_page -= 1
 
         return result
