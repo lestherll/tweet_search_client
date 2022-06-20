@@ -16,7 +16,7 @@ BEARER_TOKEN=your_bearer_token_that_you_got_from_twitter
 ```
 
 # Usage
-[SearchClient](bulan/client.py) will be the interface exposed for 
+[SearchClient](search_client/client.py) will be the interface exposed for 
 the user. It will contain everything to do with searching tweets. 
 Currently, the library is minimal and incomplete:
 - you can only currently fetch basic info from tweets although `SearchClient.get_tweet`
