@@ -144,23 +144,20 @@ class SearchClient:
         }
         tweets = self.get_tweets(query, **params)
 
-        if tweet_only:
-            result.extend(tweets["data"])
-        else:
-            result.append(tweets)
-
-        next_token = tweets.get("meta").get("next_token")
-        max_page -= 1
-        while next_token and max_page > 0:
-            time.sleep(cooldown)
-            tweets = self.get_tweets(query, **params, next_token=next_token)
+        while max_page > 0:
+            tweets = self.get_tweets(query, **params)
 
             if tweet_only:
                 result.extend(tweets["data"])
             else:
                 result.append(tweets)
-
-            next_token = tweets.get("meta").get("next_token")
             max_page -= 1
+
+            params["next_token"] = tweets.get("meta").get("next_token")
+
+            if not params["next_token"]:
+                break
+
+            time.sleep(cooldown)
 
         return result
