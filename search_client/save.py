@@ -22,7 +22,13 @@ def write_to_csv(tweets: list[dict[str, str]], filename: str) -> None:
             writer.writerow(t)
 
 
-def write_to_json(tweets: list[dict[str, str]], filename: str) -> None:
+def write_to_json(tweets: list[dict[str, str]], filename: str, append: bool = False) -> None:
 
-    with open(filename, "w") as jsonfile:
+    mode = "a" if append else "w"
+    with open(filename, mode) as jsonfile:
         jsonfile.write(json.dumps(tweets, indent=4))
+        
+        
+
+def write_to_db(tweets: list[dict[str, str]], filename: str) -> None:
+    ...
