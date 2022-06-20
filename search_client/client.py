@@ -144,7 +144,8 @@ class SearchClient:
         }
         tweets = self.get_tweets(query, **params)
 
-        while max_page > 0:
+
+        while max_page is None or max_page > 0:
             tweets = self.get_tweets(query, **params)
 
             if tweet_only:
