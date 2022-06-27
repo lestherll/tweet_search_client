@@ -21,6 +21,18 @@ less risk in leaking your credentials accidentally.
 BEARER_TOKEN=your_bearer_token_that_you_got_from_twitter
 ```
 
+In environments where creating is not possible, you can just pass
+the bearer token directly to the `SearchClient` class. You must, however,
+be aware that you would be exposing your keys to others.
+```py
+from search_client import SearchClient
+
+client = SearchClient("your_keys_must_be_string")
+
+# do work with client
+tweets = client.get_tweet(query=["from:twitterDev"])    
+```
+
 # Usage
 [SearchClient](search_client/client.py) will be the interface exposed for 
 the user. It will contain everything to do with searching tweets. 
@@ -31,6 +43,6 @@ wants you to build queries
 - You can get tweets from a certain author.
 
 # TODO
-- A richer and higher level way to mine tweets (include parameters that API allows)
-- caching
+- ~~A richer and higher level way to mine tweets (include parameters that API allows)~~
+  - explore possible designs of a DSL for querying
 - examples
