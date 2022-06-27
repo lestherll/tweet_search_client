@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import time
 from datetime import datetime
 from typing import Optional
 
 import requests
+
 from search_client.constants import config
 from search_client.url import URL
 
@@ -144,7 +147,6 @@ class SearchClient:
         }
         tweets = self.get_tweets(query, **params)
 
-
         while max_page is None or max_page > 0:
             tweets = self.get_tweets(query, **params)
 
@@ -152,7 +154,7 @@ class SearchClient:
                 result.extend(tweets["data"])
             else:
                 result.append(tweets)
-            
+
             if max_page is not None:
                 max_page -= 1
 
