@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Optional
 
 import requests
-from constants import config
-from url import URL
+from search_client.constants import config
+from search_client.url import URL
 
 
 class SearchClient:
@@ -152,11 +152,15 @@ class SearchClient:
                 result.extend(tweets["data"])
             else:
                 result.append(tweets)
-            max_page -= 1
+            
+            if max_page is not None:
+                max_page -= 1
 
             params["next_token"] = tweets.get("meta").get("next_token")
 
-            if not params["next_token"]:
+            # check for max_page to eliminate waiting
+            # when remaining page is 0 (max_page <= 0)
+            if not params["next_token"] or (max_page is not None and max_page <= 0):
                 break
 
             time.sleep(cooldown)
