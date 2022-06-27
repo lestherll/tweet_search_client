@@ -2,6 +2,12 @@
 An unofficial **WIP** client for the twitter API that has only one goal; search for tweets.
 
 
+# Installation
+Package is not ready for PyPI yet but it can be installed directly from GitHub using `pip`.
+```shell
+pip install git+https://github.com/lestherll/twitter_search_client
+```
+
 # Setup and Prerequisites
 Before everything, make sure that you have a developer account and a bearer token 
 from Twitter. You can find out how to get one [here](https://developer.twitter.com/en/docs/twitter-api)
@@ -26,5 +32,5 @@ wants you to build queries
 
 # TODO
 - A richer and higher level way to mine tweets (include parameters that API allows)
-- caching with database `sqlite3`
+- caching
 - examples
