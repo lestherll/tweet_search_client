@@ -36,10 +36,30 @@ class SearchClient:
         response = requests.get(url, headers=self.headers, params=params)
         return response.json()
 
-    def get_tweet_info(self, tweet_id: str) -> dict:
-        url = SearchClient.BASE_URL / "tweets" / tweet_id
+    def get_tweet_info(
+        self,
+        tweet_id: str | list[str],
+        *,
+        expansions: Optional[list[str]] = None,
+        media_fields: Optional[list[str]] = None,
+        place_fields: Optional[list[str]] = None,
+        poll_fields: Optional[list[str]] = None,
+        tweet_fields: Optional[list[str]] = None,
+        user_fields: Optional[list[str]] = None,
+    ) -> dict:
+        url = SearchClient.BASE_URL / "tweets"
         # ?expansions=attachments.media_keys&tweet.fields=created_at,author_id,lang,source,public_metrics,context_annotations,entities"
-        response = requests.get(url, headers=self.headers)
+        fields = {
+            "ids": [tweet_id] if isinstance(tweet_id, str) else tweet_id,
+            "media.fields": media_fields,
+            "place.fields": place_fields,
+            "poll.fields": poll_fields,
+            "tweet.fields": tweet_fields,
+            "user.fields": user_fields,
+            "expansions": expansions,
+        }
+        params = {k: ",".join(v) for k, v in fields.items() if v}
+        response = requests.get(url, headers=self.headers, params=params)
         return response.json()
 
     def get_tweets(
