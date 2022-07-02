@@ -4,11 +4,8 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class URL:
-    """A minimal class for easily building URLs
-
-    Returns:
-        _type_: _description_
+class URL(str):
+    """A minimal str subclass for easily building URLs
     """
 
     base: str
