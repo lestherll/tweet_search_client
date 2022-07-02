@@ -30,19 +30,33 @@ from search_client import SearchClient
 client = SearchClient("your_keys_must_be_string")
 
 # do work with client
-tweets = client.get_tweet(query=["from:twitterDev"])    
+tweets = client.get_recent_tweets(query=["from:twitterDev"])
 ```
 
 # Usage
-[SearchClient](search_client/client.py) will be the interface exposed for 
-the user. It will contain everything to do with searching tweets. 
-Currently, the library is minimal and incomplete:
-- you can only currently fetch basic info from tweets although `SearchClient.get_tweet`
-allows you to build primitive queries that are not too far off from how Twitter API
-wants you to build queries 
-- You can get tweets from a certain author.
+[SearchClient](search_client/client.py) will be the interface exposed to 
+the user. It will contain everything to do with searching tweets. It is 
+planned to use other endpoints of the Twitter API and expose them through
+other client types.
+
+### Main endpoints supported
+| Twitter API Endpoint  | Method                           | V2 Access Levels |
+|-----------------------|----------------------------------|------------------|
+| `/search/recent`      | `SearchClient.get_recent_tweets` | Developer        |
+| `/search/all`         | `SearchClient.get_all_tweets`    | Academic         |
+| `/tweets/counts/all`  | `SearchClient.get_tweet_counts`  | Academic         |
+
+These methods are low-level wrappers over raw requests to their respective 
+endpoints. [Enumerations](./search_client/field_enums.py) are provided for
+convenience of passing [fields](https://developer.twitter.com/en/docs/twitter-api/fields)
+and [expansions](https://developer.twitter.com/en/docs/twitter-api/expansions).
+
+There are other methods that `SearchClient` has and it is suggested to look
+thorugh the [code](./search_client/client.py).
 
 # TODO
-- ~~A richer and higher level way to mine tweets (include parameters that API allows)~~
-  - explore possible designs of a DSL for querying
+- explore possible designs of a DSL for querying tweets
+- higher level interface that doesn't require users to know about Twitter API
 - examples
+- separate clients for count, tweet lookup, and user lookup endpoint
+- model for Tweet objects (currently uses dictionaries)
