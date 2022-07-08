@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import time
+from urllib import response
 
 import requests
 
@@ -167,6 +168,85 @@ class SearchClient:
         url = SearchClient.BASE_URL / "tweets" / "search" / ("all" if archive else "recent")
         response = requests.get(url, params=params, headers=self.headers)
         return response.json()
+
+    def get_tweets(
+        self,
+        query: list[str],
+        number_of_tweets: int | None,
+        *,
+        start_time=None,
+        end_time=None,
+        archive=False,
+    ) -> list[dict]:
+        """Higher level method for fetching tweets using only query, number of tweets
+
+        Args:
+            query (list[str]):
+                Query to Twitter API.
+
+            number_of_tweets (int, optional):
+                Number of tweets wanted by the user. If `None`, return all tweets.
+
+            start_time (_type_, optional):
+                The oldest UTC timestamp from which the Tweets will be provided.
+                By default, a request will return Tweets from up to 30 days ago if
+                it is `None`. Timestamp is in second granularity and is inclusive
+                (for example, 12:00:01 includes the first second of the minute).
+                Defaults to None.
+
+            end_time (_type_, optional):
+                The newest, most recent UTC timestamp to which the Tweets will be
+                provided. Timestamp is in second granularity and is exclusive
+                (for example, 12:00:01 excludes the first second of the minute).
+                If used without start_time, Tweets from 30 days before end_time
+                will be returned by default. If not specified, end_time will
+                default to [now - 30 seconds]. Defaults to None.
+
+        Returns:
+            list[dict]: _description_
+        """
+        assert number_of_tweets >= 10, "Number of tweets must be more than or equal to 10"
+        params = {
+            "max_results": 100,
+            "end_time": end_time,
+            "start_time": start_time,
+            "next_token": None,
+            # "media_fields": list(MediaFields),
+            # "place_fields": list(PlaceFields),
+            # "poll_fields": list(PollFields),
+            "tweet_fields": [
+                TweetFields.AUTHOR_ID,
+                TweetFields.CONVERSATION_ID,
+                TweetFields.PUBLIC_METRICS,
+                TweetFields.IN_REPLY_TO_USER_ID,
+                TweetFields.CREATED_AT,
+            ],
+            # "user_fields": list(UserFields),
+        }
+
+        if number_of_tweets is None:
+            params["max_results"] = 100
+        elif number_of_tweets < 100:
+            params["max_results"] = max(10, number_of_tweets)
+
+        tweets = []
+        tweets_to_fetch = number_of_tweets
+        while tweets_to_fetch is not None or tweets_to_fetch > 0:
+            response = self._get_tweet(query, **params, archive=archive)
+            meta = response.get("meta")
+
+            if meta.get("result_count", 0) > 0:
+                tweets_to_fetch -= meta.get("result_count")
+                tweets.extend(response["data"])
+
+            if tweets_to_fetch <= 0 or not meta.get("next_token"):
+                break
+
+            time.sleep(3.1)
+            params["max_results"] = min(100, max(10, tweets_to_fetch))
+            params["next_token"] = meta.get("next_token")
+
+        return tweets
 
     def get_all_tweets(
         self,
@@ -364,3 +444,6 @@ class SearchClient:
             else:
                 break
         return total
+
+
+# client = SearchClient("AAAAAAAAAAAAAAAAAAAAAP%2FReAEAAAAAXI8wYm0EJn0RM3mLwrTvenMNkBA%3DkIrOWnw1i306MFffvkf8re7N96nvEoezoDBl2v5sun7s5GWX5z")
