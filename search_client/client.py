@@ -185,7 +185,8 @@ class SearchClient:
                 Query to Twitter API.
 
             number_of_tweets (int, optional):
-                Number of tweets wanted by the user. If `None`, return all tweets.
+                Number of tweets wanted by the user. 10 is the minimum.
+                If `None`, return all tweets.
 
             start_time (_type_, optional):
                 The oldest UTC timestamp from which the Tweets will be provided.
