@@ -6,7 +6,7 @@ import time
 import requests
 
 from search_client.constants import config
-from search_client.field_enums import UserFields
+from search_client.field_enums import MediaFields, PlaceFields, PollFields, TweetFields, UserFields
 from search_client.url import URL
 
 
@@ -101,7 +101,7 @@ class SearchClient:
         response = requests.get(url, headers=self.headers, params=params)
         return response.json()
 
-    def get_tweets(
+    def _get_tweet(
         self,
         query: list[str],
         *,
@@ -188,7 +188,7 @@ class SearchClient:
         user_fields: list[str] | None = None,
         tweet_only: bool = False,
         max_page: int | None = 1,
-    ) -> dict:
+    ) -> dict | list:
         result = []
         params = {
             "max_results": max_results,
@@ -205,10 +205,10 @@ class SearchClient:
             "tweet_fields": tweet_fields,
             "user_fields": user_fields,
         }
-        tweets = self.get_tweets(query, **params, archive=True)
+        # tweets = self._get_tweet(query, **params, archive=True)
 
         while max_page is None or max_page > 0:
-            tweets = self.get_tweets(query, **params, archive=True)
+            tweets = self._get_tweet(query, **params, archive=True)
 
             if not tweets.get("data"):
                 break
@@ -252,7 +252,7 @@ class SearchClient:
         user_fields: list[str] | None = None,
         tweet_only: bool = False,
         max_page: int | None = 1,
-    ) -> dict:
+    ) -> dict | list:
         result = []
         params = {
             "max_results": max_results,
@@ -269,10 +269,10 @@ class SearchClient:
             "tweet_fields": tweet_fields,
             "user_fields": user_fields,
         }
-        tweets = self.get_tweets(query, **params, archive=False)
+        # tweets = self._get_tweet(query, **params, archive=False)
 
         while max_page is None or max_page > 0:
-            tweets = self.get_tweets(query, **params, archive=False)
+            tweets = self._get_tweet(query, **params, archive=False)
 
             if tweet_only:
                 result.extend(tweets["data"])
