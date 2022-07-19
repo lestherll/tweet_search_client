@@ -63,7 +63,7 @@ tweets = client.get_tweets(
 | `/search/all` or `/search/recent` | `SeachClient.get_tweets`         | Developer/Academic|
 | `/tweets/counts/all`              | `SearchClient.get_tweet_counts`  | Academic          |
 
-These methods are low-level wrappers (except for `get_tweets`) over raw requests to their respective endpoints. [Enumerations](./search_client/field_enums.py) are provided forconvenience of passing [fields](https://developer.twitter.com/en/docs/twitter-api/fields)and [expansions](https://developer.twitter.com/en/docs/twitter-api/expansions).
+These methods are low-level wrappers (except for `get_tweets`) over raw requests to their respective endpoints. [Enumerations](./search_client/field_enums.py) are provided forconvenience of passing [fields](https://developer.twitter.com/en/docs/twitter-api/fields) and [expansions](https://developer.twitter.com/en/docs/twitter-api/expansions).
 
 There are other methods that `SearchClient` has and it is suggested to look through the [code](./search_client/client.py).
 Documentation using `mkdocs` is currently being set up.

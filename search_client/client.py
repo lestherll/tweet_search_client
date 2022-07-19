@@ -6,7 +6,13 @@ import time
 import requests
 
 from search_client.constants import config
-from search_client.field_enums import MediaFields, PlaceFields, PollFields, TweetFields, UserFields
+from search_client.field_enums import (
+    MediaFields,
+    PlaceFields,
+    PollFields,
+    TweetFields,
+    UserFields,
+)
 from search_client.url import URL
 
 
@@ -25,6 +31,25 @@ class SearchClient:
         tweet_fields: list[str] | None = None,
         user_fields: list[str] | None = None,
     ) -> dict:
+        """Get multiple user information by usernames.
+
+        Args:
+            usernames (list[str]): 
+                list of username strings to use for querying
+
+            expansions (list[str] | None, optional): 
+                Check field_enums.Expansions for possible options. Defaults to None.
+            
+            tweet_fields (list[str] | None, optional): 
+                Check field_enums.Expansions for possible options. Defaults to None.
+            
+            user_fields (list[str] | None, optional): 
+                Check field_enums.Expansions for possible options. Defaults to None.
+
+        Returns:
+            dict: Raw dictionary containing the result of the query.
+            "data" key will have the user info in form of list of dicts (this behaviour may change in the future)
+        """
         url = SearchClient.BASE_URL / "users" / "by"
         fields = {
             "usernames": [usernames] if isinstance(usernames, str) else usernames,
@@ -43,6 +68,26 @@ class SearchClient:
         tweet_fields: list[str] | None = None,
         user_fields: list[str] | None = None,
     ) -> dict:
+        """Get single user information by username.
+
+        Args:
+            username (str):
+                Username to use for querying.
+
+            expansions (list[str] | None, optional):
+                Check field_enums.Expansions for possible options. Defaults to None.
+
+            tweet_fields (list[str] | None, optional):
+                Tweet fields as defined by the Twitter API; only possible if user has a pinned tweet. 
+                Check field_enums.TweetFields for possible options. Defaults to None.
+
+            user_fields (list[str] | None, optional):
+                User fields as defined by the Twitter API. Check field_enums.UserFields for possible options. Defaults to None.
+
+        Returns:
+            dict: Raw dictionary containing the result of the query.
+                "data" key will have the user info in form of dict (this behaviour may change in the future)
+        """
         url = SearchClient.BASE_URL / "users" / "by" / "username" / username
         fields = {
             "tweet.fields": tweet_fields,
@@ -52,7 +97,6 @@ class SearchClient:
         params = {k: ",".join(v) for k, v in fields.items() if v}
         response = requests.get(url, headers=self.headers, params=params)
         return response.json()
-
 
     def get_tweet_info(
         self,
@@ -264,7 +308,6 @@ class SearchClient:
             "tweet_fields": tweet_fields,
             "user_fields": user_fields,
         }
-        # tweets = self._get_tweet(query, **params, archive=True)
 
         while max_page is None or max_page > 0:
             tweets = self._get_tweet(query, **params, archive=True)
