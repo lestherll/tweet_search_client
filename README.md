@@ -56,16 +56,17 @@ tweets = client.get_tweets(
 [SearchClient](search_client/client.py) will be the interface exposed to the user. It will contain everything to do with searching tweets. It is  planned to use other endpoints of the Twitter API and expose them through other client types.
 
 ### Main endpoints supported
-| Twitter API Endpoint      | Method                           | V2 Access Levels  |
-|---------------------------|----------------------------------|-------------------|
-| `/search/recent`          | `SearchClient.get_recent_tweets` | Developer         |
-| `/search/all`             | `SearchClient.get_all_tweets`    | Academic          |
-| `/search/all` or `/recent`| `SeachClient.get_tweets`         | Developer/Academic|
-| `/tweets/counts/all`      | `SearchClient.get_tweet_counts`  | Academic          |
+| Twitter API Endpoint              | Method                           | V2 Access Levels  |
+|-----------------------------------|----------------------------------|-------------------|
+| `/search/recent`                  | `SearchClient.get_recent_tweets` | Developer         |
+| `/search/all`                     | `SearchClient.get_all_tweets`    | Academic          |
+| `/search/all` or `/search/recent` | `SeachClient.get_tweets`         | Developer/Academic|
+| `/tweets/counts/all`              | `SearchClient.get_tweet_counts`  | Academic          |
 
 These methods are low-level wrappers (except for `get_tweets`) over raw requests to their respective endpoints. [Enumerations](./search_client/field_enums.py) are provided forconvenience of passing [fields](https://developer.twitter.com/en/docs/twitter-api/fields)and [expansions](https://developer.twitter.com/en/docs/twitter-api/expansions).
 
 There are other methods that `SearchClient` has and it is suggested to look through the [code](./search_client/client.py).
+Documentation using `mkdocs` is currently being set up.
 
 # TODO
 - explore possible designs of a DSL for querying tweets
