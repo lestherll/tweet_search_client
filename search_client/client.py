@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime as dt
 import time
-from urllib import response
 
 import requests
 
@@ -18,11 +17,6 @@ class SearchClient:
     def __init__(self, bearer_token: str) -> None:
         self.bearer_token = bearer_token
         self.headers = {"Authorization": f"Bearer {self.bearer_token}"}
-
-    def get_user_id(self, username: str) -> str:
-        url = SearchClient.BASE_URL / "users" / "by" / "username" / username
-        response = requests.get(url, headers=self.headers)
-        return response.json()["data"]["id"]
 
     def get_users(
         self,
@@ -59,22 +53,6 @@ class SearchClient:
         response = requests.get(url, headers=self.headers, params=params)
         return response.json()
 
-    def get_tweets_by_user(
-        self,
-        user: str,
-        max_results: int = 10,
-    ) -> dict:
-        user_id = self.get_user_id(user)
-        url = SearchClient.BASE_URL / "users" / user_id / "tweets"
-
-        params = {
-            "tweet.fields": "created_at",
-            # "expansions": "author_id"
-            "max_results": max_results,
-        }
-
-        response = requests.get(url, headers=self.headers, params=params)
-        return response.json()
 
     def get_tweet_info(
         self,
@@ -88,7 +66,7 @@ class SearchClient:
         user_fields: list[str] | None = None,
     ) -> dict:
         url = SearchClient.BASE_URL / "tweets"
-        # ?expansions=attachments.media_keys&tweet.fields=created_at,author_id,lang,source,public_metrics,context_annotations,entities"
+
         fields = {
             "ids": [tweet_id] if isinstance(tweet_id, str) else tweet_id,
             "media.fields": media_fields,
@@ -445,6 +423,3 @@ class SearchClient:
             else:
                 break
         return total
-
-
-# client = SearchClient("AAAAAAAAAAAAAAAAAAAAAP%2FReAEAAAAAXI8wYm0EJn0RM3mLwrTvenMNkBA%3DkIrOWnw1i306MFffvkf8re7N96nvEoezoDBl2v5sun7s5GWX5z")
