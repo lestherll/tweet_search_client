@@ -146,7 +146,7 @@ class SearchClient:
         """
         Search recent tweets by separately providing query parameters.
         This method is meant to be lower-level and only abstracts making
-        an actual HTTP request.
+        an actual HTTP request. Use `get_tweets` for simpler way.
 
         Example:
         >>> sc = SearchClient("your_bearer_token")  # make SearchCLient obj
@@ -226,7 +226,16 @@ class SearchClient:
                 default to [now - 30 seconds]. Defaults to None.
 
         Returns:
-            list[dict]: _description_
+            list[dict]: 
+                Resulting list of tweets (dict). Each tweet dict will have:
+                author_id, conversation_id, created_at, id, public_metrics, and text.
+                Expansions and context annotations are not included. 
+            
+        
+        >>> from search_client.client import SearchClient
+        >>> client = SearchClient("<your_token>")
+        >>> client.get_tweets(query=["from:TwitterDev", "-is:retweet"])
+        [{}, {...}]
         """
         assert number_of_tweets >= 10, "Number of tweets must be more than or equal to 10"
         params = {
