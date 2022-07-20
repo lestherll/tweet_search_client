@@ -34,16 +34,16 @@ class SearchClient:
         """Get multiple user information by usernames.
 
         Args:
-            usernames (list[str]): 
+            usernames (list[str]):
                 list of username strings to use for querying
 
-            expansions (list[str] | None, optional): 
+            expansions (list[str] | None, optional):
                 Check field_enums.Expansions for possible options. Defaults to None.
-            
-            tweet_fields (list[str] | None, optional): 
+
+            tweet_fields (list[str] | None, optional):
                 Check field_enums.Expansions for possible options. Defaults to None.
-            
-            user_fields (list[str] | None, optional): 
+
+            user_fields (list[str] | None, optional):
                 Check field_enums.Expansions for possible options. Defaults to None.
 
         Returns:
@@ -78,7 +78,7 @@ class SearchClient:
                 Check field_enums.Expansions for possible options. Defaults to None.
 
             tweet_fields (list[str] | None, optional):
-                Tweet fields as defined by the Twitter API; only possible if user has a pinned tweet. 
+                Tweet fields as defined by the Twitter API; only possible if user has a pinned tweet.
                 Check field_enums.TweetFields for possible options. Defaults to None.
 
             user_fields (list[str] | None, optional):
@@ -226,12 +226,12 @@ class SearchClient:
                 default to [now - 30 seconds]. Defaults to None.
 
         Returns:
-            list[dict]: 
+            list[dict]:
                 Resulting list of tweets (dict). Each tweet dict will have:
                 author_id, conversation_id, created_at, id, public_metrics, and text.
-                Expansions and context annotations are not included. 
-            
-        
+                Expansions and context annotations are not included.
+
+
         >>> from search_client.client import SearchClient
         >>> client = SearchClient("<your_token>")
         >>> client.get_tweets(query=["from:TwitterDev", "-is:retweet"])
